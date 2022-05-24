@@ -1,6 +1,6 @@
 import * as THREE from './three/build/three.module.js'
 import shapes from './SimpleShapes.js'
-import { GLTFExporter } from './three/examples/jsm/exporters/GLTFExporter.js'
+import { OBJExporter } from './three/examples/jsm/exporters/OBJExporter.js'
 
 const scene = new THREE.Scene();
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
@@ -44,30 +44,12 @@ renderer.render(scene, camera);
 document.addEventListener("keypress", (e) => {
     console.log(e.key);
     if (e.key == " ") {
-        // Instantiate a exporter
-        const exporter = new GLTFExporter();
+        // Instantiate an exporter
+        const exporter = new OBJExporter();
 
-        // Parse the input and generate the glTF output
-        exporter.parse(
-            scene,
-            // called when the gltf has been generated
-            function (result) {
-
-                // console.log(result);
-                // downloadJSON(gltf);
-                const output = JSON.stringify(result, null, 2);
-                console.log(output);
-                saveString(output, 'scene.gltf');
-
-            },
-            // called when there is an error in the generation
-            function (error) {
-
-                console.log('An error happened');
-
-            },
-            {}
-        );
+        // Parse the input and generate the OBJ output
+        const data = exporter.parse( scene );
+        saveString( data, 'objfileoutput.obj' );
     }
 })
 
