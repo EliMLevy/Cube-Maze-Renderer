@@ -6,7 +6,7 @@ const scene = new THREE.Scene();
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
 scene.add(ambientLight);
 
-scene.background = new THREE.Color("cyan");
+scene.background = new THREE.Color("black");
 
 const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 directionalLight.position.set(100, 2000, 100);
@@ -30,6 +30,9 @@ renderer.render(scene, camera);
 
 document.body.appendChild(renderer.domElement);
 
+
+const axesHelper = new THREE.AxesHelper( 500 );
+scene.add( axesHelper );
 
 let length = 10;
 
@@ -119,38 +122,44 @@ function generateMaze(maze) {
             // Add walls to the group as if this face was centered at 0,0,0
             let wall;
             if (pt1.row < pt2.row) { // wall parralel to x axis
-                let depth = 1;
-                let offsetZ = 0;
-                if (pt1.row == -1) {
-                    depth = cellWidth;
-                    offsetZ = -cellWidth / 2;
+                let width = cellWidth;
+                let xOffSet = 0;
+                if(pt1.col == 0) {
+                    width = cellWidth * 2;
+                    xOffSet = -cellWidth/2;
                 }
-                if (pt2.row == length) {
-                    depth = cellWidth;
-                    offsetZ = cellWidth / 2;
+
+                if(pt1.col == length - 1) {
+                    width = cellWidth * 2;
+                    xOffSet = cellWidth/2;
                 }
-                wall = shapes.getCube(cellWidth, wallHeight, depth, "rgb(0,255,0)");
-                wall.position.x = pt1.col * cellWidth + cellWidth / 2 - (length / 2 * cellWidth);
+                
+                wall = shapes.getCube(width, wallHeight, 5, "rgb(0,255,0)");
+                wall.position.x = pt1.col * cellWidth + cellWidth / 2 - (length / 2 * cellWidth) + xOffSet;
                 wall.position.y = wallHeight / 2;
-                wall.position.z = (pt1.row + 1) * cellWidth - (length / 2 * cellWidth) + offsetZ;
+                wall.position.z = (pt1.row + 1) * cellWidth - (length / 2 * cellWidth) ;
+
             } else { // Wall parrallel to z axis
-                let width = 1;
-                let offsetX = 0;
-                if (pt1.col == -1) {
-                    width = cellWidth;
-                    offsetX = -cellWidth / 2;
+                let height = cellWidth;
+                let zOffSet = 0;
+                if(pt1.row == 0) {
+                    height = cellWidth * 2;
+                    zOffSet = -cellWidth/2;
                 }
-                if (pt2.col == length) {
-                    width = cellWidth;
-                    offsetX = cellWidth / 2;
+
+                if(pt1.row == length - 1) {
+                    height = cellWidth * 2;
+                    zOffSet = cellWidth/2;
                 }
-                wall = shapes.getCube(width, wallHeight, cellWidth, "rgb(0,255,0)");
-                wall.position.x = pt2.col * cellWidth - (length / 2 * cellWidth) + offsetX;
+                
+                wall = shapes.getCube(5, wallHeight, height, "rgb(0,255,0)");
+                wall.position.x = pt2.col * cellWidth - (length / 2 * cellWidth);
                 wall.position.y = wallHeight / 2;
-                wall.position.z = (pt1.row) * cellWidth + cellWidth / 2 - (length / 2 * cellWidth);
+                wall.position.z = (pt1.row) * cellWidth + cellWidth / 2 - (length / 2 * cellWidth) + zOffSet;
 
             }
             group.add(wall);
+
         }
         // Rotate/translate the whole group into place
         // group.position.y = cellWidth * length / 2;
